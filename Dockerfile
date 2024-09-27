@@ -14,4 +14,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Command to run the app
-CMD ["streamlit", "run", "your_app.py"]
+CMD ["streamlit", "run", "ocr_app.py"]

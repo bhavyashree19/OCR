@@ -1,0 +1,52 @@
+/* styles.css */
+.stApp {
+    background-image: url('https://cdn.pixabay.com/photo/2022/03/15/20/16/background-7071134_1280.png');
+    background-size: cover;
+    background-position: center;
+    color: #ffffff; /* Change text color for better visibility */
+}
+.stButton button {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    transition: transform 0.3s ease; /* Animation for scaling */
+}
+.stButton button:hover {
+    background-color: #45a049; /* Darker Green on hover */
+    animation: bounce 0.5s; /* Bounce effect on hover */
+}
+h1, h2 {
+    color: #ffffff; /* Header color */
+    animation: slideIn 0.5s; /* Slide-in animation */
+}
+.stTextInput > div > input {
+    background-color: rgba(255, 255, 255, 0.8); /* Light background for input */
+    transition: background-color 0.3s; /* Smooth transition */
+}
+.stTextInput > div > input:focus {
+    background-color: rgba(255, 255, 255, 1); /* Solid background on focus */
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

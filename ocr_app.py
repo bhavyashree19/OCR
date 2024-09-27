@@ -6,9 +6,6 @@ import logging
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# Set the path to the Tesseract executable
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
-
 def assess_image_quality(img):
     """Check image quality (size, mode) before processing."""
     if img is None or img.size[0] < 100 or img.size[1] < 100:

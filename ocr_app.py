@@ -2,12 +2,18 @@ import streamlit as st
 import pytesseract
 from PIL import Image, ImageFilter, ImageEnhance
 import logging
+import os
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Set the path to the Tesseract executable
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+# Update this path according to your deployment environment
+TESSERACT_CMD = r'C:\Program Files\Tesseract-OCR\tesseract.exe'  # Change this for your setup
+if os.name != 'nt':  # If not Windows
+    TESSERACT_CMD = '/usr/bin/tesseract'  # Adjust for your deployment
+
+pytesseract.pytesseract.tesseract_cmd = TESSERACT_CMD
 
 def assess_image_quality(img):
     """Check image quality (size, mode) before processing."""
@@ -55,8 +61,10 @@ def main():
     st.title("OCR Text Extractor from Image Upload")
     
     # Load CSS from external file
-    with open('styles.css') as f:
-        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+    css_file_path = 'styles.css'
+    if os.path.exists(css_file_path):
+        with open(css_file_path) as f:
+            st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
     # File upload for the image
     uploaded_file = st.file_uploader("Upload an image...", type=["jpg", "jpeg", "png"])

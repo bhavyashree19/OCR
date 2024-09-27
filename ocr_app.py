@@ -1,10 +1,13 @@
 import streamlit as st
-import easyocr
+import pytesseract
 from PIL import Image, ImageFilter, ImageEnhance
 import logging
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+# Set the path to the Tesseract executable
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 def assess_image_quality(img):
     """Check image quality (size, mode) before processing."""
@@ -25,13 +28,21 @@ def preprocess_image(img):
     enhancer = ImageEnhance.Contrast(img)
     img = enhancer.enhance(1.5)  # Increase contrast by 50%
     
+    # Apply median filter to reduce noise
+    img = img.filter(ImageFilter.MedianFilter(size=3))
+    
+    # Binarize the image
+    img = img.point(lambda p: p > 128 and 255)  # Convert to binary image (black and white)
+    
     return img
 
 def perform_ocr(img):
     """Perform OCR on the image and return the extracted text."""
-    reader = easyocr.Reader(['en', 'hi'])  # Specify the languages you need
-    result = reader.readtext(img, detail=0)  # detail=0 returns only text
-    return " ".join(result)
+    try:
+        return pytesseract.image_to_string(img, lang='eng+hin')  # Use both languages
+    except pytesseract.pytesseract.TesseractError as e:
+        logging.error(f"OCR error: {e}")
+        return None
 
 def highlight_keywords(text, keywords):
     """Highlight the keywords in the extracted text."""
@@ -43,6 +54,10 @@ def main():
     """Main function to orchestrate the OCR process."""
     st.title("OCR Text Extractor from Image Upload")
     
+    # Load CSS from external file
+    with open('styles.css') as f:
+        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
     # File upload for the image
     uploaded_file = st.file_uploader("Upload an image...", type=["jpg", "jpeg", "png"])
     
